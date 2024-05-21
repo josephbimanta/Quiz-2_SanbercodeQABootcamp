@@ -118,7 +118,7 @@ describe('template spec', () => {
     cy.get('.message-error > div').should('contain.text', 'The requested qty is not available')
   })
 
-  it.only('Add Product to Cart from Detail Product page - Input 0 quantity', () => {
+  it('Add Product to Cart from Detail Product page - Input 0 quantity', () => {
     cy.clearCookies()
     cy.visit('https://magento.softwaretestingboard.com/');
     cy.get('.panel > .header > .authorization-link > a').click()
@@ -142,7 +142,7 @@ describe('template spec', () => {
     cy.get('#qty-error').should('contain.text', 'Please enter a quantity greater than 0.')
   })
 
-  it('Add Product to Cart from Detail Product page - Didnt choose color', () => {
+  it('Add Product to Cart from Detail Product page - Cart quantity set to minus', () => {
     cy.clearCookies()
     cy.visit('https://magento.softwaretestingboard.com/');
     cy.get('.panel > .header > .authorization-link > a').click()
@@ -151,11 +151,30 @@ describe('template spec', () => {
     cy.get('.login-container > .block-customer-login > .block-content > #login-form > .fieldset > .actions-toolbar > div.primary > #send2').click()
     cy.get(':nth-child(2) > .greet > .logged-in').should('contain.text', 'Welcome, joseph sanber!')
 
-    cy.get('.product-items > :nth-child(3)').click()
-    cy.get('#option-label-size-143-item-170').click()
-    cy.get('#qty').clear().type('5')
-    cy.get('#product-addtocart-button > span').click()
-    cy.get('div[id="super_attribute[93]-error"]').should('contain.text', 'This is a required field.')
-    
+    cy.get('.showcart').click()
+    cy.get('.showcart').should('be.visible')
+    cy.get(':nth-child(7) > .secondary > .action > span').click()
+    cy.get('#cart-62722-qty').clear()
+    cy.get('#cart-62722-qty').type('-5')
+    cy.get('.update > span').click()
+    cy.get('div[id="cart-62722-qty-error"]').should('contain.text', 'Please enter a number greater than 0 in this field.')
+  })
+
+  it.only('Add Product to Cart from Detail Product page - Quantity in cart set to 0', () => {
+    cy.clearCookies()
+    cy.visit('https://magento.softwaretestingboard.com/');
+    cy.get('.panel > .header > .authorization-link > a').click()
+    cy.get('#email').type('joseph.sanber1@gmail.com')
+    cy.get('.login-container > .block-customer-login > .block-content > #login-form > .fieldset > .password > .control > #pass').type('qwerty7890-=')
+    cy.get('.login-container > .block-customer-login > .block-content > #login-form > .fieldset > .actions-toolbar > div.primary > #send2').click()
+    cy.get(':nth-child(2) > .greet > .logged-in').should('contain.text', 'Welcome, joseph sanber!')
+
+    cy.get('.showcart').click()
+    cy.get('.showcart').should('be.visible')
+    cy.get(':nth-child(7) > .secondary > .action > span').click()
+    cy.get('#cart-62722-qty').clear()
+    cy.get('#cart-62722-qty').type('0')
+    cy.get('.update > span').click()
+    cy.get('div[id="cart-62722-qty-error"]').should('contain.text', 'Please enter a number greater than 0 in this field.')
   })
 })
